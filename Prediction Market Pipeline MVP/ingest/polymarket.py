@@ -1,11 +1,11 @@
 import json
 import requests
-import logging
 from .config import POLYMARKET_WATCHLIST
+from .logging_config import get_logger
 
 POLY_BASE = "https://gamma-api.polymarket.com"
 
-logging.basicConfig(level=logging.INFO, format="%(message)s") 
+logger = get_logger(__name__)
 
 def fetch_market(slug):
     resp = requests.get(f"{POLY_BASE}/markets/keyset", params={"slug": slug}, timeout=10)
@@ -22,7 +22,7 @@ def fetch_watchlist():
         try:
             market = fetch_market(slug)
         except (requests.RequestException, ValueError) as e:
-            logging.error(f"skip {slug}: {e}")
+            logger.error(f"skip {slug}: {e}")
             continue
 
         outcomes = json.loads(market["outcomes"])

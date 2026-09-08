@@ -1,10 +1,10 @@
 import requests
-import logging
 from .config import KALSHI_WATCHLIST
+from .logging_config import get_logger
 
 KALSHI_BASE = "https://api.elections.kalshi.com/trade-api/v2"
 
-logging.basicConfig(level=logging.INFO, format="%(message)s") 
+logger = get_logger(__name__)
 
 def fetch_market(ticker):
     resp = requests.get(f"{KALSHI_BASE}/markets/{ticker}", timeout=10)
@@ -18,7 +18,7 @@ def fetch_watchlist():
         try:
             market = fetch_market(ticker)
         except requests.RequestException as e:
-            logging.error(f"skip {ticker}: {e}")
+            logger.error(f"skip {ticker}: {e}")
             continue
 
         yes_price = float(market["last_price_dollars"])
