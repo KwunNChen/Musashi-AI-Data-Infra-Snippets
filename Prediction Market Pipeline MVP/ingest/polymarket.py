@@ -16,6 +16,17 @@ def fetch_market(slug):
     return markets[0]
 
 
+def fetch_market_by_id(market_id):
+    """Same as fetch_market but keyed by Polymarket's numeric id — this is what's stored as
+    external_id in our `markets` table, not the slug, so lookups by external_id go through here."""
+    resp = requests.get(f"{POLY_BASE}/markets/keyset", params={"id": market_id}, timeout=10)
+    resp.raise_for_status()
+    markets = resp.json()["markets"]
+    if not markets:
+        raise ValueError(f"no market for id {market_id}")
+    return markets[0]
+
+
 def fetch_watchlist():
     rows = []
     for slug, category in POLYMARKET_WATCHLIST:

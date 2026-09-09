@@ -58,6 +58,37 @@ def insert_snapshot(market_id, row):
     )
     resp.raise_for_status()
 
-    '''Note for Eric: 
-    SUPABASE is different from duckdb because you send a request to the API instead of writing own SQL. Like we send GET or POST instead. And each table we create has its own URL 
+    '''Note for Eric:
+    SUPABASE is different from duckdb because you send a request to the API instead of writing own SQL. Like we send GET or POST instead. And each table we create has its own URL
     HEADERS is needed because you enabled RLS for Supabase, and that requires the service key to be passed to the Supabase API gateway'''
+
+
+def get_platforms():
+    """Returns {platform_id: name}, e.g. {1: 'kalshi', 2: 'polymarket'} — don't hardcode the ids."""
+    resp = requests.get(f"{SUPABASE_URL}/rest/v1/platforms", headers=HEADERS, params={"select": "id,name"}, timeout=10)
+    resp.raise_for_status()
+    return {p["id"]: p["name"] for p in resp.json()}
+
+
+def get_all_markets():
+    resp = requests.get(
+        f"{SUPABASE_URL}/rest/v1/markets",
+        headers=HEADERS,
+        params={"select": "id,platform_id,external_id,title"},
+        timeout=15,
+    )
+    resp.raise_for_status()
+    return resp.json()
+
+
+def upsert_resolution(market_id, outcome, resolved_at):
+    payload = {"market_id": market_id, "outcome": outcome, "resolved_at": resolved_at}
+    resp = requests.post(
+        f"{SUPABASE_URL}/rest/v1/resolutions",
+        headers={**HEADERS, "Prefer": "resolution=merge-duplicates,return=representation"},
+        params={"on_conflict": "market_id"},
+        json=[payload],
+        timeout=10,
+    )
+    resp.raise_for_status()
+    return resp.json()[0]

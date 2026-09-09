@@ -25,3 +25,13 @@ jobs:
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+      - run: python -m ingest.backfill_resolutions
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+      - uses: actions/upload-artifact@v4
+        if: always()   # capture logs even if an ingestion step above failed
+        with:
+          name: pipeline-log-${{ github.run_id }}
+          path: "Prediction Market Pipeline MVP/logs/pipeline.log"
+          retention-days: 30
