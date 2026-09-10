@@ -52,6 +52,10 @@ body(
     "false ~80-percentage-point \"divergence\" on the clearest pair in the dataset, and fixed it before it made "
     "it into a finding."
 )
+body("Everything below is a point-in-time analysis of data collected between <b>2026-09-02</b> and "
+     "<b>2026-09-09</b> (640 snapshot rows across 19 markets). The cross-platform comparisons in Section 4.3 "
+     "start from 2026-09-04, since Polymarket ingestion came online a day after Kalshi's. The pipeline keeps "
+     "running, so the figures here describe that window and not the live state of the markets.")
 
 # ---------- Architecture ----------
 h1("1. Architecture and pipeline")
@@ -96,8 +100,14 @@ body("A GitHub Actions workflow (<b>.github/workflows/prediction-markets-w1.yml<
      "2 hours. It's offset from the top of the hour to avoid the queueing delays GitHub applies when many "
      "workflows are scheduled for :00 at once. A shared logger (<b>ingest/logging_config.py</b>) writes "
      "timestamped output to both the console, visible in the Actions logs, and a local <b>logs/pipeline.log</b> "
-     "file. That replaced four separate, duplicated logging configurations that used to be scattered across the "
-     "ingestion scripts.")
+     "file, which the workflow also uploads as a build artifact so it survives past the runner. That replaced "
+     "four separate, duplicated logging configurations that used to be scattered across the ingestion scripts.")
+body("After each ingestion run, a resolutions backfill step checks every tracked market against its platform "
+     "and records the outcome once a market settles. The resolutions table is still empty since nothing tracked "
+     "has closed yet, but the mechanism is in place and running. A second, independent workflow checks every 6 "
+     "hours whether the most recent snapshot is over 4 hours old, and fails loudly, which triggers GitHub's "
+     "normal failed-workflow notification, if the pipeline has gone quiet for longer than one missed run would "
+     "explain.")
 
 # ---------- Data Sources ----------
 h1("2. Data sources: platform differences")
@@ -118,6 +128,10 @@ bullets([
     "threshold gets re-listed under a new slug once the prior instance resolves; I found three different "
     "\"Bitcoin dip to $60k\" slugs for the same nominal question. Watchlist slugs need periodic re-verification "
     "because of this.",
+    "<b>Matching strikes don't mean matching contracts.</b> While trying to link the tracked crypto markets "
+    "across platforms, I found that Kalshi's ask what price BTC or ETH will be on one specific future date, "
+    "while Polymarket's ask whether that price is ever touched before a deadline. Same asset, same rough dollar "
+    "amount, different question, found by reading the contract terms rather than assumed from the strike price.",
 ])
 
 # ---------- Research ----------
@@ -169,16 +183,19 @@ caption("Crypto threshold markets and politics markets with active reshuffling, 
 
 h2("4.2 Volume distribution")
 chart("volume.png")
-caption("The Polymarket \"Will no Fed rate cuts happen in 2026?\" market carries about $8.16M in volume, "
-        "against near-zero volume on niche Kalshi cabinet markets like Susie Wiles and Markwayne Mullin. That's "
-        "a direct, self-collected instance of the Evercore ISI finding that high-volume markets price more "
-        "reliably than thin ones.")
+caption("The Polymarket \"Will no Fed rate cuts happen in 2026?\" market carries about $8.19M in volume,"
+        "against near-zero volume on niche Kalshi cabinet markets like Susie Wiles and Markwayne Mullin. That "
+        "lines up with Evercore ISI's analysis of five years of completed Kalshi and Polymarket markets, which "
+        "found high-volume markets price more reliably than thin ones, here in a self-collected instance rather "
+        "than their original sample.")
 
 h2("4.3 Cross-platform divergence")
 body("Of five intended cross-platform pairs, only three are populated in cross_platform_links: one macro pair "
-     "and two politics pairs. I didn't add the two crypto pairs, since Kalshi's and Polymarket's Bitcoin "
-     "threshold markets track different strike prices and resolution dates. A like-for-like match there would "
-     "have been impractical, not just noisy.")
+     "and two politics pairs. I didn't add crypto pairs. Checking the actual contract terms, not just the "
+     "dollar strikes, showed that the tracked Kalshi crypto markets ask what price BTC or ETH will be on a "
+     "specific future date, while the tracked Polymarket markets ask whether that price is ever touched before "
+     "a deadline. Those are different questions even at matching strikes, so linking them would have produced a "
+     "divergence number that looks real but doesn't measure anything.")
 
 h2("Macro pair: Fed rate cut")
 chart("divergence_8_29.png")
@@ -187,22 +204,23 @@ caption("This compares Kalshi's \"will the Fed cut rates before 2027\" against P
         "two questions are logically opposite (on Kalshi, Yes means a cut happens; on Polymarket, Yes means it "
         "doesn't), so a naive raw comparison showed a false ~80-percentage-point \"divergence\" that was really "
         "just two inverted questions lined up against each other. Once I corrected for polarity, the two series "
-        "started in close agreement, around 0.10 to 0.11 in early September, then diverged over the week: "
-        "Kalshi's implied cut probability rose to 0.142 while Polymarket's fell to 0.073. Across 27 aligned "
-        "snapshots, the Kalshi:Polymarket ratio averaged 1.41 (median 1.42, range 0.81 to 1.93). By the end of "
-        "the window the platforms were roughly twice as far apart in ratio terms, despite a fairly modest "
-        "absolute gap. I can't tell from one week of data whether that's a real information or liquidity "
-        "asymmetry between the platforms, or just noise from a short observation window.")
+        "started close together on September 4, Kalshi at 0.097 and Polymarket at 0.113, then separated over the "
+        "following days. Kalshi ended at 0.102, roughly where it started, after a mid-window spike to 0.142. "
+        "Polymarket declined steadily to 0.070. The gap widened mostly because Polymarket drifted down, not "
+        "because Kalshi moved up. Across 32 aligned snapshots the Kalshi:Polymarket ratio averaged 1.44 (median "
+        "1.43, standard deviation 0.24, range 0.81 to 1.95). I can't tell from one week of data whether that's a "
+        "real information or liquidity asymmetry between the platforms, or just noise from a short observation "
+        "window.")
 
 h2("Politics pairs")
 chart("divergence_9_32.png")
 chart("divergence_10_31.png")
 body("The two politics pairs don't show one uniform pattern, and treating them as if they did would overstate "
-     "the finding. The RFK Jr. pair (Kalshi:Polymarket ratio) is tight and consistent: mean 0.72, median 0.70, "
-     "standard deviation 0.06 across 27 points. Kalshi is consistently pricing this market about 30% below "
-     "Polymarket. The Pete Hegseth pair is both higher and noisier: mean 0.80, median 0.80, standard deviation "
-     "0.11, ranging from 0.59 to 0.95, with no comparably tight relationship. These are two distinct patterns, "
-     "not one \"~65-70%, consistent\" finding across politics.")
+     "the finding. The RFK Jr. pair (Kalshi:Polymarket ratio) is tight and consistent: mean 0.71, median 0.68, "
+     "standard deviation 0.06 across 32 points, ranging only from 0.64 to 0.78. Kalshi is consistently pricing "
+     "this market about 30% below Polymarket. The Pete Hegseth pair is both higher and noisier: mean 0.81, "
+     "median 0.84, standard deviation 0.11, ranging from 0.59 to 0.95, with no comparably tight relationship. "
+     "These are two distinct patterns, not one \"~65-70%, consistent\" finding across politics.")
 
 # ---------- Limitations ----------
 story.append(PageBreak())
@@ -210,10 +228,13 @@ h1("5. Limitations")
 bullets([
     "About 19 markets tracked, a deliberately small and fixed watchlist, not the full catalog of either "
     "platform.",
-    "Only 3 of 5 planned cross-platform links are populated. The 2 crypto pairs were never added, because of "
-    "strike and date mismatches between platforms.",
-    "About 1 week of observation history. The Fed-pair divergence trend is a real, measured result, but it's "
-    "too short a window to call it a durable pattern rather than a one-week move.",
+    "Only 3 of 5 planned cross-platform links are populated. The 2 crypto pairs were never added: the tracked "
+    "Kalshi and Polymarket crypto markets turned out to be different contract types (price-on-a-date versus "
+    "touch-by-deadline), not just different strikes.",
+    "Eight days of observation (2026-09-02 to 2026-09-09), and only six for the cross-platform pairs. The "
+    "Fed-pair divergence is a real, measured result, but it's too short a window to call it a durable pattern "
+    "rather than a one-week move. The mid-window spike to 0.142 on the Kalshi side, which had receded by the "
+    "end of the window, is a good illustration of how much a single week can mislead.",
     "The politics pairs are approximate matches. Kalshi's cabinet-departure tickers resolve by May 22, 2026, "
     "while the matched Polymarket markets resolve by December 31, 2026: the same underlying question, but "
     "different windows.",
@@ -223,11 +244,8 @@ bullets([
 # ---------- Next Steps ----------
 h1("6. Next steps")
 bullets([
-    "Populate the two crypto cross_platform_links now that there's a live watchlist history to match against.",
-    "Backfill the resolutions table as tracked markets close, to evaluate realized accuracy instead of just "
-    "live pricing.",
-    "Persist GitHub Actions log history through actions/upload-artifact. Right now logs/pipeline.log resets "
-    "every run, since Actions runners are ephemeral.",
+    "Track a genuinely comparable crypto pair. This needs a Kalshi market phrased as touch-by-deadline, since "
+    "the ones currently tracked ask a different question than the Polymarket side.",
     "Trade-level ingestion and wallet-level \"smart money\" tracking through Polymarket's subgraph. This was "
     "scoped out of this week's MVP and flagged as a stretch goal from the start.",
     "Widen the watchlist once the pipeline has run unattended for longer, to strengthen the volume-reliability "

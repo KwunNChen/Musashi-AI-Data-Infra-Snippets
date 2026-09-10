@@ -1,0 +1,27 @@
+name: pipeline-health-check
+
+# Runs independently of the ingestion workflow, on its own schedule, so it still catches
+# the case where that workflow stops firing entirely (not just a slow snapshot). A failed
+# run here triggers GitHub's normal failed-workflow email to the repo owner.
+
+on:
+  schedule:
+    - cron: "45 */6 * * *"   # every 6h, offset so it doesn't collide with the ingestion run
+  workflow_dispatch: {}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: "Prediction Market Pipeline MVP"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests python-dotenv
+      - run: python -m ingest.health_check
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}

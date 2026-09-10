@@ -7,24 +7,28 @@ POLY_BASE = "https://gamma-api.polymarket.com"
 
 logger = get_logger(__name__)
 
+def _fetch_by(param, value):
+    """`closed` is a hard filter on this endpoint, not a hint — omitting it defaults to
+    closed=false, so a market that has actually closed comes back as an empty list unless
+    you explicitly ask for closed=true (confirmed directly against the live API, not assumed).
+    Since we're looking up one specific known market, try open first, then closed."""
+    for closed in (False, True):
+        resp = requests.get(f"{POLY_BASE}/markets/keyset", params={param: value, "closed": closed}, timeout=10)
+        resp.raise_for_status()
+        markets = resp.json()["markets"]
+        if markets:
+            return markets[0]
+    raise ValueError(f"no market for {param}={value} (checked both open and closed)")
+
+
 def fetch_market(slug):
-    resp = requests.get(f"{POLY_BASE}/markets/keyset", params={"slug": slug}, timeout=10)
-    resp.raise_for_status()
-    markets = resp.json()["markets"]
-    if not markets:
-        raise ValueError(f"no market for slug {slug}")
-    return markets[0]
+    return _fetch_by("slug", slug)
 
 
 def fetch_market_by_id(market_id):
     """Same as fetch_market but keyed by Polymarket's numeric id — this is what's stored as
     external_id in our `markets` table, not the slug, so lookups by external_id go through here."""
-    resp = requests.get(f"{POLY_BASE}/markets/keyset", params={"id": market_id}, timeout=10)
-    resp.raise_for_status()
-    markets = resp.json()["markets"]
-    if not markets:
-        raise ValueError(f"no market for id {market_id}")
-    return markets[0]
+    return _fetch_by("id", market_id)
 
 
 def fetch_watchlist():
