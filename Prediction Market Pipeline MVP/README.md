@@ -1,27 +1,51 @@
 # Prediction Market Pipeline MVP
 
-A pipeline that pulls Kalshi and Polymarket prediction-market data into Supabase on a schedule, plus the analysis and research that came out of it. Built for a one-week internship deliverable.
+Kalshi and Polymarket both price the same real-world events. They don't always agree. This pulls both into Supabase on a schedule and measures the gap.
 
-Full write-up: [`Prediction_Market_Pipeline_Report.pdf`](./Prediction_Market_Pipeline_Report.pdf).
+**[Full write-up (PDF)](./Prediction_Market_Pipeline_Report.pdf)** · 19 markets tracked · 640+ snapshots · running unattended since 2026-09-02
 
-## What's here
+![Fed rate cut divergence](./analysis/output/divergence_8_29.png)
 
-- `ingest/` — Kalshi and Polymarket ingestion scripts, shared logging, and the resolutions backfill.
-- `analysis/` — pulls the collected data back out, builds the repricing-speed/volume/divergence charts, and assembles the PDF report.
-- `.github/workflows/` (repo root, not here): runs the ingestion scripts every 2 hours and checks the pipeline is still alive every 6.
+Both lines above are the same question: will the Fed cut rates before 2027? Kalshi ended the week near where it started, around 0.10. Polymarket drifted down to 0.07. Getting this chart to mean anything required catching that the two platforms phrase the question in opposite directions, comparing them raw showed a fake 80-point gap that was really just inverted polarity.
 
-## Running it locally
+## What it found
 
-1. `python -m venv venv`, activate it, then `pip install -r requirements.txt`.
-2. Copy `.env.example` to `.env` and fill in your own Supabase project URL and service_role key.
-3. `python -m ingest.run_kalshi` and `python -m ingest.run_polymarket` each pull one snapshot.
-4. `python -m analysis.report` regenerates the charts in `analysis/output/`, then `python -m analysis.build_report` rebuilds the PDF from them.
+- **Platforms diverge on the same event.** Across 32 aligned snapshots the Kalshi:Polymarket ratio averaged 1.44 on the Fed pair, and the gap widened over the week.
+- **The divergence isn't uniform.** RFK Jr. tracks tightly (ratio 0.71, std 0.06); Pete Hegseth is much noisier (0.81, std 0.11) despite being the same category of market. Averaging them together would have hidden that.
+- **Matching strikes don't mean matching contracts.** Kalshi's crypto markets ask what BTC will be worth on one date; Polymarket's ask whether it ever touches a price first. Same asset, same dollar amount, different question, so they're deliberately not linked.
 
-## Schema
+## How it works
 
-Six tables in Supabase: `platforms`, `markets`, `market_snapshots` (the core time-series table), `resolutions`, `cross_platform_links`, and `kol_theses`. Row Level Security is on; the ingestion scripts write through the service_role key, which bypasses it.
+```
+ingest/     Kalshi + Polymarket pulls, shared logging, resolutions backfill, health check
+analysis/   reads the data back out, builds charts, assembles the PDF
+```
 
-## Notes for next time
+Six tables in Supabase: `platforms`, `markets`, `market_snapshots` (the core time series), `resolutions`, `cross_platform_links`, `kol_theses`. RLS is on; ingestion writes with the service_role key, which bypasses it.
 
-- Kalshi's and Polymarket's crypto markets in this watchlist turned out to ask different kinds of questions (price on a specific date vs. touched-by-a-deadline), so they're not linked for cross-platform comparison. The report has the full explanation.
-- Polymarket slugs aren't stable long-term identifiers. The same price threshold gets re-listed under a new slug once the old one resolves, so watchlist slugs need periodic re-checking.
+Two workflows live in the repo root `.github/workflows/` (Actions won't find them in a subfolder): ingestion, and an independent health check every 6 hours that fails loudly if snapshots go stale.
+
+The ingestion cron asks for every 2 hours. GitHub delivers about 41% of that — measured median gap between actual batches is 4.6h, worst case 34.6h. Runs that fire always complete all 19 markets, so this is GitHub dropping scheduled events, not the pipeline breaking. If you need a guaranteed interval, this is the wrong scheduler.
+
+## Running it
+
+```bash
+python -m venv venv && venv\Scripts\activate
+pip install -r requirements.txt
+cp .env.example .env      # then fill in your Supabase URL + service_role key
+```
+
+```bash
+python -m ingest.run_kalshi        # one snapshot per watchlist market
+python -m ingest.run_polymarket
+python -m analysis.report          # regenerate charts
+python -m analysis.build_report    # rebuild the PDF from them
+```
+
+Charts first, then the PDF. Doing it the other way embeds stale images.
+
+## Gotchas worth knowing
+
+- **Polymarket's `closed` param is a filter, not a hint.** Omit it and you silently only get open markets, so a resolved market comes back as an empty list. This quietly broke resolution detection until it was caught.
+- **Polymarket slugs aren't stable.** The same price threshold gets re-listed under a new slug once the old one resolves. Re-verify watchlist slugs periodically.
+- **Polymarket doesn't expose open interest per market**, only per event, which aggregates across sibling markets. Left NULL rather than filled with a misleading number.

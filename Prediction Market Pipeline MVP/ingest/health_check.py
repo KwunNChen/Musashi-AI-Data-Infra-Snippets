@@ -8,9 +8,11 @@ from .logging_config import get_logger
 
 logger = get_logger(__name__)
 
-# Cron runs every 2h. 4h allows one missed run before this flags anything, so a single
-# hiccup doesn't page anyone, but two in a row does.
-STALE_AFTER_HOURS = 4
+# The cron asks for every 2h, but GitHub only delivers about 41% of scheduled runs: measured
+# median gap between actual batches is 4.6h, worst observed 34.6h. A 4h threshold was calibrated
+# to the schedule we requested rather than the one we get, so it fired on a healthy pipeline.
+# 10h is comfortably above the normal delivered gap while still catching a genuine outage.
+STALE_AFTER_HOURS = 10
 
 
 def main():
