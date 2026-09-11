@@ -2,6 +2,7 @@ import os
 import polars as pl
 import matplotlib.pyplot as plt
 from .load_data import load_snapshots, load_links
+from . import stats as stats_module
 from ingest.logging_config import get_logger
 
 OUTPUT_DIR = "analysis/output"
@@ -24,7 +25,6 @@ def plot_repricing_speed(df: pl.DataFrame):
         df.group_by(["external_id", "title"])
         .agg(pl.col("repricing_speed").mean().alias("avg_repricing_speed"))
         .drop_nulls("avg_repricing_speed")
-        .with_columns((pl.col("title") + " — " + pl.col("external_id")).alias("label"))
         .sort("avg_repricing_speed", descending=True)
     )
     plt.figure(figsize=(10, 6))
@@ -86,6 +86,9 @@ def main():
     plot_repricing_speed(snapshots)
     plot_divergence(snapshots, links)
     plot_volume(snapshots)
+
+    # Same window, same source, one pass: the PDF reads these numbers instead of hardcoding them.
+    stats_module.main()
 
 
 if __name__ == "__main__":

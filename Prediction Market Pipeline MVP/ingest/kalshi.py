@@ -12,6 +12,17 @@ def fetch_market(ticker):
     return resp.json()["market"]
 
 
+def build_title(market):
+    """Every market in a Kalshi event shares one `title`, so all five BTC strike buckets
+    arrive as "BTC price  on Jan 1, 2027?". The strike is in `yes_sub_title`; append it when
+    it has a digit so chart labels stay distinct. Digit-free subtitles ("Cuts") are skipped."""
+    title = market["title"].strip()
+    sub = (market.get("yes_sub_title") or "").strip()
+    if sub and any(c.isdigit() for c in sub) and sub not in title:
+        return f"{title} {sub}"
+    return title
+
+
 def fetch_watchlist():
     rows = []
     for ticker, category in KALSHI_WATCHLIST:
@@ -24,7 +35,7 @@ def fetch_watchlist():
         yes_price = float(market["last_price_dollars"])
         rows.append({
             "external_id": market["ticker"],
-            "title": market["title"],
+            "title": build_title(market),
             "category": category,
             "event_slug": market["event_ticker"],
             "close_time": market["close_time"],

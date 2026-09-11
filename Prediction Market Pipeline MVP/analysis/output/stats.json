@@ -1,0 +1,328 @@
+{
+  "window": {
+    "configured_start": "2026-09-02T00:00:00Z",
+    "configured_end": "2026-09-11T06:00:00Z",
+    "first_snapshot": "2026-09-02",
+    "last_snapshot": "2026-09-11",
+    "days": 8.7,
+    "rows": 773,
+    "markets": 19,
+    "per_platform": {
+      "polymarket": 7,
+      "kalshi": 12
+    },
+    "links": 3,
+    "resolutions": 0
+  },
+  "delivery": {
+    "batches": 42,
+    "span_hours": 208.2,
+    "median_gap_hours": 4.6,
+    "max_gap_hours": 34.6,
+    "batches_per_day": 4.8,
+    "requested_per_day": 12,
+    "delivery_pct": 40,
+    "complete_batches": 38,
+    "incomplete_batches": [
+      {
+        "at": "2026-09-02 07:58 UTC",
+        "markets": 12,
+        "platforms": [
+          "kalshi"
+        ]
+      },
+      {
+        "at": "2026-09-03 18:35 UTC",
+        "markets": 12,
+        "platforms": [
+          "kalshi"
+        ]
+      },
+      {
+        "at": "2026-09-03 20:09 UTC",
+        "markets": 7,
+        "platforms": [
+          "polymarket"
+        ]
+      },
+      {
+        "at": "2026-09-09 19:37 UTC",
+        "markets": 7,
+        "platforms": [
+          "polymarket"
+        ]
+      }
+    ]
+  },
+  "repricing": [
+    {
+      "title": "Will Bitcoin reach $90,000 by December 31, 2026?",
+      "platform": "polymarket",
+      "speed": 0.004418175286197207
+    },
+    {
+      "title": "Will Bitcoin dip to $70,000 by December 31, 2026?",
+      "platform": "polymarket",
+      "speed": 0.0038996843690415777
+    },
+    {
+      "title": "Will the Federal Reserve cut rates before 2027?",
+      "platform": "kalshi",
+      "speed": 0.003024148643432642
+    },
+    {
+      "title": "Will Bitcoin reach $95,000 by December 31, 2026?",
+      "platform": "polymarket",
+      "speed": 0.0022623622474364333
+    },
+    {
+      "title": "Will Pete Hegseth be the next person to leave the Trump Cabinet?",
+      "platform": "kalshi",
+      "speed": 0.002157341869573452
+    },
+    {
+      "title": "Will Markwayne Mullin be the next person to leave the Trump Cabinet?",
+      "platform": "kalshi",
+      "speed": 0.0017589325021318354
+    },
+    {
+      "title": "BTC price  on Jan 1, 2027? 70,000 to 74,999.99",
+      "platform": "kalshi",
+      "speed": 0.0016735866677889141
+    },
+    {
+      "title": "RFK Jr. Out by December 31?",
+      "platform": "polymarket",
+      "speed": 0.0014657139908570073
+    },
+    {
+      "title": "Will Robert F. Kennedy Jr. be the next person to leave the Trump Cabinet?",
+      "platform": "kalshi",
+      "speed": 0.001031594048038991
+    },
+    {
+      "title": "Will Susie Wiles be the next person to leave the Trump Cabinet?",
+      "platform": "kalshi",
+      "speed": 0.0007857041900751172
+    },
+    {
+      "title": "BTC price  on Jan 1, 2027? 75,000 to 79,999.99",
+      "platform": "kalshi",
+      "speed": 0.0007690804238124136
+    },
+    {
+      "title": "Pete Hegseth out as Secretary of Defense by December 31?",
+      "platform": "polymarket",
+      "speed": 0.0007331855667044331
+    },
+    {
+      "title": "BTC price  on Jan 1, 2027? 150,000 or above",
+      "platform": "kalshi",
+      "speed": 0.0007170873040722094
+    },
+    {
+      "title": "Will 1 Fed rate cut happen in 2026?",
+      "platform": "polymarket",
+      "speed": 0.0005911784253702854
+    },
+    {
+      "title": "ETH price  on Jan 1, 2027? 2,250 to 2,499.99",
+      "platform": "kalshi",
+      "speed": 0.00044498818629381116
+    },
+    {
+      "title": "Will no Fed rate cuts happen in 2026?",
+      "platform": "polymarket",
+      "speed": 0.00039506428108158296
+    },
+    {
+      "title": "ETH price  on Jan 1, 2027? 2,000 to 2,249.99",
+      "platform": "kalshi",
+      "speed": 0.0003524087805716291
+    },
+    {
+      "title": "BTC price  on Jan 1, 2027? 65,000 to 69,999.99",
+      "platform": "kalshi",
+      "speed": 0.00033452563472023694
+    },
+    {
+      "title": "BTC price  on Jan 1, 2027? 19,999.99 or below",
+      "platform": "kalshi",
+      "speed": 0.00019804896349799294
+    }
+  ],
+  "volume": [
+    {
+      "title": "Will no Fed rate cuts happen in 2026?",
+      "platform": "polymarket",
+      "volume": 8236142.977016998
+    },
+    {
+      "title": "Will 1 Fed rate cut happen in 2026?",
+      "platform": "polymarket",
+      "volume": 2984954.9997169995
+    },
+    {
+      "title": "BTC price  on Jan 1, 2027? 75,000 to 79,999.99",
+      "platform": "kalshi",
+      "volume": 2545846.91
+    },
+    {
+      "title": "BTC price  on Jan 1, 2027? 65,000 to 69,999.99",
+      "platform": "kalshi",
+      "volume": 2318302.05
+    },
+    {
+      "title": "BTC price  on Jan 1, 2027? 70,000 to 74,999.99",
+      "platform": "kalshi",
+      "volume": 2298761.21
+    },
+    {
+      "title": "BTC price  on Jan 1, 2027? 150,000 or above",
+      "platform": "kalshi",
+      "volume": 2014214.9
+    },
+    {
+      "title": "Will Bitcoin reach $90,000 by December 31, 2026?",
+      "platform": "polymarket",
+      "volume": 1862087.9657690001
+    },
+    {
+      "title": "ETH price  on Jan 1, 2027? 2,000 to 2,249.99",
+      "platform": "kalshi",
+      "volume": 1248597.3
+    },
+    {
+      "title": "ETH price  on Jan 1, 2027? 2,250 to 2,499.99",
+      "platform": "kalshi",
+      "volume": 1228645.17
+    },
+    {
+      "title": "Will the Federal Reserve cut rates before 2027?",
+      "platform": "kalshi",
+      "volume": 1190199.32
+    },
+    {
+      "title": "BTC price  on Jan 1, 2027? 19,999.99 or below",
+      "platform": "kalshi",
+      "volume": 655690.88
+    },
+    {
+      "title": "Will Bitcoin reach $95,000 by December 31, 2026?",
+      "platform": "polymarket",
+      "volume": 529632.8661150001
+    },
+    {
+      "title": "Pete Hegseth out as Secretary of Defense by December 31?",
+      "platform": "polymarket",
+      "volume": 420246.8625690001
+    },
+    {
+      "title": "Will Bitcoin dip to $70,000 by December 31, 2026?",
+      "platform": "polymarket",
+      "volume": 247282.34101700003
+    },
+    {
+      "title": "Will Pete Hegseth be the next person to leave the Trump Cabinet?",
+      "platform": "kalshi",
+      "volume": 44452.46
+    },
+    {
+      "title": "Will Robert F. Kennedy Jr. be the next person to leave the Trump Cabinet?",
+      "platform": "kalshi",
+      "volume": 25846.58
+    },
+    {
+      "title": "RFK Jr. Out by December 31?",
+      "platform": "polymarket",
+      "volume": 24431.427405000002
+    },
+    {
+      "title": "Will Markwayne Mullin be the next person to leave the Trump Cabinet?",
+      "platform": "kalshi",
+      "volume": 18147.74
+    },
+    {
+      "title": "Will Susie Wiles be the next person to leave the Trump Cabinet?",
+      "platform": "kalshi",
+      "volume": 14114.47
+    }
+  ],
+  "pairs": [
+    {
+      "kalshi_market_id": 8,
+      "polymarket_market_id": 29,
+      "kalshi_title": "Will the Federal Reserve cut rates before 2027?",
+      "polymarket_title": "Will no Fed rate cuts happen in 2026?",
+      "category": "macro",
+      "inverted": true,
+      "chart": "divergence_8_29.png",
+      "n": 39,
+      "start": "2026-09-04",
+      "end": "2026-09-11",
+      "ratio_mean": 1.4046481321342408,
+      "ratio_median": 1.4344827586206894,
+      "ratio_std": 0.2551088913722751,
+      "ratio_min": 0.8088888888888885,
+      "ratio_max": 1.9448275862068962,
+      "kalshi_first": 0.097,
+      "kalshi_last": 0.075,
+      "kalshi_min": 0.06,
+      "kalshi_max": 0.142,
+      "poly_first": 0.11250000000000004,
+      "poly_last": 0.07350000000000001,
+      "poly_min": 0.0685,
+      "poly_max": 0.11250000000000004
+    },
+    {
+      "kalshi_market_id": 9,
+      "polymarket_market_id": 32,
+      "kalshi_title": "Will Pete Hegseth be the next person to leave the Trump Cabinet?",
+      "polymarket_title": "Pete Hegseth out as Secretary of Defense by December 31?",
+      "category": "politics",
+      "inverted": false,
+      "chart": "divergence_9_32.png",
+      "n": 39,
+      "start": "2026-09-04",
+      "end": "2026-09-11",
+      "ratio_mean": 0.8487544331140967,
+      "ratio_median": 0.8780487804878049,
+      "ratio_std": 0.12184128968990342,
+      "ratio_min": 0.5853658536585366,
+      "ratio_max": 1.0731707317073171,
+      "kalshi_first": 0.2,
+      "kalshi_last": 0.22,
+      "kalshi_min": 0.12,
+      "kalshi_max": 0.22,
+      "poly_first": 0.225,
+      "poly_last": 0.22,
+      "poly_min": 0.205,
+      "poly_max": 0.23
+    },
+    {
+      "kalshi_market_id": 10,
+      "polymarket_market_id": 31,
+      "kalshi_title": "Will Robert F. Kennedy Jr. be the next person to leave the Trump Cabinet?",
+      "polymarket_title": "RFK Jr. Out by December 31?",
+      "category": "politics",
+      "inverted": false,
+      "chart": "divergence_10_31.png",
+      "n": 39,
+      "start": "2026-09-04",
+      "end": "2026-09-11",
+      "ratio_mean": 0.699656614402728,
+      "ratio_median": 0.6666666666666667,
+      "ratio_std": 0.056699432810467014,
+      "ratio_min": 0.6415094339622641,
+      "ratio_max": 0.7843137254901961,
+      "kalshi_first": 0.17,
+      "kalshi_last": 0.19,
+      "kalshi_min": 0.17,
+      "kalshi_max": 0.21,
+      "poly_first": 0.265,
+      "poly_last": 0.27,
+      "poly_min": 0.25,
+      "poly_max": 0.285
+    }
+  ]
+}
