@@ -266,31 +266,40 @@ def pdf_number_results(stats, flat):
         ("top volume", f"${top['volume'] / 1e6:.2f}M"),
         ("volume speed rank", f"{rank}th of {len(rep)}"),
     ]
-    for i, r in enumerate(rep[:3]):
-        want.append((f"fastest #{i + 1} speed", f"{r['speed']:.5f}"))
+    def norm(x):
+        return " ".join(str(x).split())
+
+    def speed_row(rank, r):
+        return (f"{rank} {norm(r['title'])} {r['platform']} {r['speed']:.5f} "
+                f"{r['speed'] * 2400:.1f}")
+
+    for i, r in enumerate(rep[:3], 1):
+        want.append((f"repricing table row {i}", speed_row(i, r)))
     for i, r in enumerate(rep[-3:]):
-        want.append((f"slowest speed {i + 1}", f"{r['speed']:.5f}"))
+        rank = len(rep) - 2 + i
+        want.append((f"repricing table row {rank}", speed_row(rank, r)))
+    want.append(("fastest points/day in prose", f"about {rep[0]['speed'] * 2400:.1f} points a day"))
+    want.append(("slowest points/day in prose", f"about {rep[-1]['speed'] * 2400:.1f},"))
+    want.append(("fast/slow spread", f"roughly {rep[0]['speed'] / rep[-1]['speed']:.0f} times"))
     if fed:
         want += [
             ("fed n", f"{fed['n']} aligned snapshots"),
-            ("fed mean", f"averaged {fed['ratio_mean']:.2f}"),
-            ("fed median", f"median {fed['ratio_median']:.2f}"),
-            ("fed std", f"deviation {fed['ratio_std']:.2f}"),
-            ("fed range", f"{fed['ratio_min']:.2f} to {fed['ratio_max']:.2f}"),
+            ("fed mean in prose", f"averaged {fed['ratio_mean']:.2f}"),
             ("fed kalshi first", f"{fed['kalshi_first']:.3f}"),
             ("fed kalshi last", f"{fed['kalshi_last']:.3f}"),
             ("fed kalshi max", f"{fed['kalshi_max']:.3f}"),
             ("fed poly first", f"{fed['poly_first']:.3f}"),
             ("fed poly last", f"{fed['poly_last']:.3f}"),
         ]
-    for name, p in (("rfk", rfk), ("hegseth", heg)):
+
+    # One needle per table row catches a dropped or mangled cell that loose values would miss.
+    def pair_row(label, p):
+        return (f"{label} {p['n']} {p['ratio_mean']:.2f} {p['ratio_median']:.2f} "
+                f"{p['ratio_std']:.2f} {p['ratio_min']:.2f} to {p['ratio_max']:.2f}")
+
+    for label, p in (("Fed rate cut", fed), ("RFK Jr. departure", rfk), ("Hegseth departure", heg)):
         if p:
-            want += [
-                (f"{name} mean", f"{p['ratio_mean']:.2f}"),
-                (f"{name} median", f"{p['ratio_median']:.2f}"),
-                (f"{name} std", f"{p['ratio_std']:.2f}"),
-                (f"{name} range", f"{p['ratio_min']:.2f} to {p['ratio_max']:.2f}"),
-            ]
+            want.append((f"pairs table row: {label}", pair_row(label, p)))
     for b in D["incomplete_batches"]:
         want.append((f"incomplete batch {b['at']}", b["at"]))
     return [(label, needle in flat, needle) for label, needle in want]
