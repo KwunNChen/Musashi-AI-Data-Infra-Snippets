@@ -64,7 +64,7 @@ def insert_snapshot(market_id, row):
 
 
 def get_platforms():
-    """Returns {platform_id: name}, e.g. {1: 'kalshi', 2: 'polymarket'} — don't hardcode the ids."""
+    """Returns {platform_id: name}, e.g. {1: 'kalshi', 2: 'polymarket'}. Don't hardcode the ids."""
     resp = requests.get(f"{SUPABASE_URL}/rest/v1/platforms", headers=HEADERS, params={"select": "id,name"}, timeout=10)
     resp.raise_for_status()
     return {p["id"]: p["name"] for p in resp.json()}

@@ -4,7 +4,7 @@ Weekly data infrastructure projects. One folder per week, each self-contained.
 
 | Week | Project | What it does |
 |---|---|---|
-| 1 | [Prediction Market Pipeline MVP](<./Prediction Market Pipeline MVP/>) | Pulls Kalshi + Polymarket odds into Supabase every 2 hours, then measures where the two platforms disagree. [Report (PDF)](<./Prediction Market Pipeline MVP/Prediction_Market_Pipeline_Report.pdf>) |
+| 1 | [Prediction Market Pipeline MVP](<./Prediction Market Pipeline MVP/>) | Pulls Kalshi + Polymarket odds into Supabase on a 2-hour cron (GitHub delivers about 40% of those), then measures where the two platforms disagree. [Report (PDF)](<./Prediction Market Pipeline MVP/Prediction_Market_Pipeline_Report.pdf>) |
 
 ## How this repo is organized
 

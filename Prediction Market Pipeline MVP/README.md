@@ -2,7 +2,7 @@
 
 Kalshi and Polymarket both price the same real-world events. They don't always agree. This pulls both into Supabase on a schedule and measures the gap.
 
-**[Full write-up (PDF)](./Prediction_Market_Pipeline_Report.pdf)** · 19 markets tracked · 773 snapshots · collecting since 2026-09-02
+**[Full write-up (PDF)](./Prediction_Market_Pipeline_Report.pdf)** · 19 markets tracked · 849 snapshots · collecting since 2026-09-02
 
 ![Fed rate cut divergence](./analysis/output/divergence_8_29.png)
 
@@ -10,8 +10,8 @@ Both lines above are the same question: will the Fed cut rates before 2027? Gett
 
 ## What it found
 
-- **The platforms diverge, then stop diverging.** Across 39 aligned snapshots the Kalshi:Polymarket ratio on the Fed pair averaged 1.40, swinging between 0.81 and 1.94. But both series drifted down over the window and finished within a thousandth of each other (0.075 vs 0.074). One week is not enough to call that a platform difference.
-- **The divergence isn't uniform across markets.** RFK Jr. tracks tightly (ratio mean 0.70, std 0.06, never leaving 0.64 to 0.78). Pete Hegseth is noisier (0.85, std 0.12) and tops out at 1.07, meaning Kalshi sometimes prices it *above* Polymarket. Averaging the two together would hide that.
+- **The platforms diverge, then converge again.** Across 43 aligned snapshots the Kalshi:Polymarket ratio on the Fed pair averaged 1.38, swinging between 0.81 and 1.94. Both series drifted down over the window and finished close to level (0.064 against 0.068), with Kalshi ending marginally below after spending the middle of the window well above. The gap opens and closes inside one window rather than holding.
+- **The divergence isn't uniform across markets.** RFK Jr. tracks tightly (ratio mean 0.69, std 0.07, range 0.47 to 0.78). Pete Hegseth is noisier (0.85, std 0.12) and tops out at 1.07, meaning Kalshi sometimes prices it *above* Polymarket. Averaging the two together would hide that.
 - **Contract structure drives repricing more than asset class does.** Polymarket's touch-by-deadline Bitcoin markets are the fastest-moving things tracked; Kalshi's price-on-a-date Bitcoin buckets are the slowest. Same asset, opposite ends of the ranking, because one reprices on every move toward the barrier and the other only cares where price finishes.
 
 ## How it works

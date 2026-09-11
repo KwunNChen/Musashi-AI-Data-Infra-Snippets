@@ -1,0 +1,37 @@
+name: verify
+
+# Runs the full verification suite. The report quotes numbers generated from a frozen window
+# and prose that interprets them, and both can go stale independently. This is what catches it.
+
+on:
+  push:
+  workflow_dispatch: {}
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: "Prediction Market Pipeline MVP"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt -r requirements-dev.txt
+      - name: verify
+        run: python verify.py | tee verify.log
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+      - name: self-test (prove the suite can fail)
+        run: python verify.py --self-test | tee -a verify.log
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: verify-log-${{ github.run_id }}
+          path: "Prediction Market Pipeline MVP/verify.log"
+          retention-days: 30

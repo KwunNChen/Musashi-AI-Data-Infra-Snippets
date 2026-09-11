@@ -22,7 +22,12 @@ WINDOW_END = parse_ts(ANALYSIS_END)
 def fetch_all(table, **params):
     """Pages through PostgREST instead of taking the first N rows. A fixed limit quietly
     truncates the analysis once the table outgrows it, which is the kind of bug that shows up
-    as numbers that are merely a bit wrong."""
+    as numbers that are merely a bit wrong.
+
+    Always sends an explicit order. Postgres makes no ordering promise without one, so
+    offset paging can repeat or skip rows between pages, and even single-page reads can come
+    back in a different order run to run. Callers pass the order column, because not every
+    table here is keyed on `id`: resolutions is keyed on market_id."""
     rows, offset = [], 0
     while True:
         page = dict(params, limit=PAGE, offset=offset)
@@ -63,12 +68,12 @@ def load_snapshots() -> pl.DataFrame:
 
 
 def load_links() -> pl.DataFrame:
-    return pl.DataFrame(fetch_all("cross_platform_links", select="*"))
+    return pl.DataFrame(fetch_all("cross_platform_links", select="*", order="id.asc"))
 
 
 def load_markets():
-    return fetch_all("markets", select="*")
+    return fetch_all("markets", select="*", order="id.asc")
 
 
 def load_platforms():
-    return {p["id"]: p["name"] for p in fetch_all("platforms", select="*")}
+    return {p["id"]: p["name"] for p in fetch_all("platforms", select="*", order="id.asc")}

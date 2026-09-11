@@ -1,0 +1,3 @@
+# Verification only, not needed to run the pipeline.
+# verify.py skips its PDF checks with an explicit SKIP if this isn't installed.
+pypdf

@@ -6,10 +6,13 @@ analysis/ reads these bounds, so re-running on a later day reproduces the same r
 
 Move ANALYSIS_END forward when you want the report to cover newer data, then rerun
 `python -m analysis.report` and `python -m analysis.build_report` together.
+
+Keep ANALYSIS_END in the past. A bound set into the future still lets the next scheduled run
+land inside the window, which is the drift this module exists to prevent.
 """
 
 ANALYSIS_START = "2026-09-02T00:00:00Z"
-ANALYSIS_END = "2026-09-11T06:00:00Z"
+ANALYSIS_END = "2026-09-11T21:30:00Z"
 
 # join_asof tolerance when lining up a Kalshi snapshot against a Polymarket one.
 PAIR_TOLERANCE = "30m"

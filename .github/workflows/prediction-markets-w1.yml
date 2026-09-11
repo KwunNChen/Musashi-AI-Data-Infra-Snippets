@@ -2,7 +2,7 @@ name: prediction-markets-w1
 
 on:
   schedule:
-    - cron: "17 */2 * * *"   # every 2h, offset from :00 — see note below
+    - cron: "17 */2 * * *"   # every 2h, offset from :00 (see README on delivery rate)
   workflow_dispatch: {}       # adds a manual "Run workflow" button for testing
 
 jobs:

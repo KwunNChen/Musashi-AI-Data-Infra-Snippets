@@ -61,8 +61,8 @@ def compute_all():
     records = load_snapshot_records()
     markets = {m["id"]: m for m in load_markets()}
     platforms = load_platforms()
-    links = fetch_all("cross_platform_links", select="*")
-    resolutions = fetch_all("resolutions", select="*")
+    links = fetch_all("cross_platform_links", select="*", order="id.asc")
+    resolutions = fetch_all("resolutions", select="*", order="market_id.asc")
 
     times = sorted({r["ts_parsed"] for r in records})
     batches = _batches(times)
@@ -179,7 +179,7 @@ def main():
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     stats = compute_all()
     with open(STATS_PATH, "w", encoding="utf-8") as f:
-        json.dump(stats, f, indent=2)
+        json.dump(stats, f, indent=2, sort_keys=True)
     print(f"wrote {STATS_PATH}")
     return stats
 

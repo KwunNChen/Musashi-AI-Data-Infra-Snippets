@@ -8,7 +8,7 @@ POLY_BASE = "https://gamma-api.polymarket.com"
 logger = get_logger(__name__)
 
 def _fetch_by(param, value):
-    """`closed` is a hard filter on this endpoint, not a hint — omitting it defaults to
+    """`closed` is a hard filter on this endpoint, not a hint. Omitting it defaults to
     closed=false, so a market that has actually closed comes back as an empty list unless
     you explicitly ask for closed=true (confirmed directly against the live API, not assumed).
     Since we're looking up one specific known market, try open first, then closed."""
@@ -26,7 +26,7 @@ def fetch_market(slug):
 
 
 def fetch_market_by_id(market_id):
-    """Same as fetch_market but keyed by Polymarket's numeric id — this is what's stored as
+    """Same as fetch_market but keyed by Polymarket's numeric id, which is what's stored as
     external_id in our `markets` table, not the slug, so lookups by external_id go through here."""
     return _fetch_by("id", market_id)
 

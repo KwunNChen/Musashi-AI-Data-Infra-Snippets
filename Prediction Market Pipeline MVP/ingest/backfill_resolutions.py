@@ -6,7 +6,7 @@ from .logging_config import get_logger
 
 logger = get_logger(__name__)
 
-# Safe to rerun on a schedule — most markets are still open, so most runs find nothing new.
+# Safe to rerun on a schedule: most markets are still open, so most runs find nothing new.
 # Checked against real Kalshi settled-market JSON before writing this (not guessed):
 # status flips to "finalized" and a "result" field ("yes"/"no") appears.
 # Polymarket's outcome is read off outcomePrices once closed=True (see analysis notes on Day 3/5).

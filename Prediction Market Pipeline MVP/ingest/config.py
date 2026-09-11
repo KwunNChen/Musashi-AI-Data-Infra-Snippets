@@ -24,7 +24,7 @@ KALSHI_WATCHLIST = [
 POLYMARKET_WATCHLIST = [
     ("will-bitcoin-reach-95000-by-december-31-2026-from-june-8", "crypto"),      # 43.5% yes
     ("will-bitcoin-reach-90000-by-december-31-2026-113-862-581-343", "crypto"),  # 59.5% yes
-    ("will-bitcoin-dip-to-70000-by-december-31-2026-from-august-24", "crypto"),  # 49% yes — basically a coinflip
+    ("will-bitcoin-dip-to-70000-by-december-31-2026-from-august-24", "crypto"),  # 49% yes, basically a coinflip
     ("will-no-fed-rate-cuts-happen-in-2026", "macro"),
     ("will-1-fed-rate-cut-happen-in-2026", "macro"),
     ("rfk-jr-out-by-december-31-524", "politics"),
