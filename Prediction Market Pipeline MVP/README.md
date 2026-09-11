@@ -1,6 +1,6 @@
 # Prediction Market Pipeline MVP
 
-Kalshi and Polymarket both price the same real-world events. They don't always agree. This pulls both into Supabase on a schedule and measures the gap.
+Kalshi and Polymarket both price the same real-world events, but they don't always agree so this pulls both into Supabase on a schedule and measures the gap.
 
 **[Full write-up (PDF)](./Prediction_Market_Pipeline_Report.pdf)** · 19 markets tracked · 849 snapshots · collecting since 2026-09-02
 
